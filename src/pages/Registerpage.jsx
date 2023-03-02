@@ -1,11 +1,15 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import RegisterInput from '../components/RegisterInput';
 import { Logo } from '../components/styled/Logo';
+import { asyncRegister } from '../states/users/actions';
 
 function Registerpage() {
-  const registerHandler = () => {
-    // TODO: Dispatch Register
+  const dispatch = useDispatch();
+
+  const registerHandler = (registerForm) => {
+    dispatch(asyncRegister(registerForm));
   };
 
   return (

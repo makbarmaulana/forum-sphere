@@ -1,11 +1,15 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import LoginInput from '../components/LoginInput';
 import { Logo } from '../components/styled/Logo';
+import { asyncLogin } from '../states/authUser/action';
 
 function Loginpage() {
-  const loginHandler = () => {
-    // TODO: Dispatch Login
+  const dispatch = useDispatch();
+
+  const loginHandler = (loginForm) => {
+    dispatch(asyncLogin(loginForm));
   };
 
   return (
