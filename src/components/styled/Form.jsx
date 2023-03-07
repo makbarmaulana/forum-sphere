@@ -53,7 +53,7 @@ export const Input = styled.input`
   height: 100%;
   font-size: 16px;
   font-weight: 400;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
 
