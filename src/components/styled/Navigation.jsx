@@ -8,6 +8,7 @@ import {
   IoMail,
   IoLogOut,
   IoCaretDown,
+  IoAddCircleOutline,
 } from 'react-icons/io5';
 import { Logo } from './Logo';
 import { Input } from './Form';
@@ -26,6 +27,9 @@ function Navigation() {
         </SearchBox>
       </NavBrand>
       <NavList>
+        <Nav to="/threads/new" className="add-thread">
+          <IoAddCircleOutline />
+        </Nav>
         <Nav to="/" className="home">
           <IoHome />
           <h5>Home</h5>
@@ -104,6 +108,13 @@ const Nav = styled(NavLink)`
 
   svg {
     font-size: 22px;
+  }
+
+  &.add-thread {
+    svg {
+      font-size: 26px;
+      color: #00aeef;
+    }
   }
 
   &.home {

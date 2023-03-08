@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
+import Addpage from './pages/Addpage';
 import Errorpage from './pages/Errorpage';
 import Homepage from './pages/Homepage';
 import Loginpage from './pages/Loginpage';
@@ -28,7 +29,10 @@ function App() {
       </>
       )}
       {isAuth && (
-        <Route index path="/" element={<Homepage />} />
+        <>
+          <Route index path="/" element={<Homepage />} />
+          <Route index path="/threads/new" element={<Addpage />} />
+        </>
       )}
       <Route path="*" element={<Errorpage />} />
     </Routes>

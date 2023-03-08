@@ -61,6 +61,25 @@ export const api = (() => {
     return users;
   };
 
+  const createThread = async ({ title, body, category }) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        '/threads',
+        { title, body, category },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const { thread } = response.data.data;
+      return thread;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
   const getAllThreads = async () => {
     const response = await instance.get('/threads');
     const { threads } = response.data.data;
@@ -81,6 +100,7 @@ export const api = (() => {
     register,
     getOwnProfile,
     getAllUsers,
+    createThread,
     getAllThreads,
     getThreadDetail,
   };
