@@ -1,22 +1,11 @@
 import React from 'react';
-import {
-  IoChatbubble,
-  IoShare,
-  IoThumbsDown,
-  IoThumbsUp,
-} from 'react-icons/io5';
 import styled from 'styled-components';
+import { IoThumbsDown, IoThumbsUp } from 'react-icons/io5';
 import { postedAt } from '../utils/formatDate';
 import { Button } from './styled/Button';
 
-function ThreadDetail({
-  title,
-  createdAt,
-  body,
-  upVotesBy,
-  downVotesBy,
-  comments,
-  owner,
+function Comments({
+  content, createdAt, upVotesBy, downVotesBy, owner,
 }) {
   return (
     <Card>
@@ -34,8 +23,7 @@ function ThreadDetail({
         <p className="date">{postedAt(createdAt)}</p>
       </CardHeader>
       <CardBody>
-        <h5 className="title">{title}</h5>
-        <p className="body">{body}</p>
+        <p className="body">{content}</p>
       </CardBody>
       <CardFooter>
         <Button type="button" className="like">
@@ -46,19 +34,12 @@ function ThreadDetail({
           <IoThumbsDown />
           <p>{downVotesBy.length}</p>
         </Button>
-        <Button type="button" className="comments">
-          <IoChatbubble />
-          <p>{comments.length}</p>
-        </Button>
-        <Button type="button" className="share">
-          <IoShare />
-        </Button>
       </CardFooter>
     </Card>
   );
 }
 
-export default ThreadDetail;
+export default Comments;
 
 const Card = styled.div`
   background-color: #1b2730;
@@ -66,7 +47,7 @@ const Card = styled.div`
   padding: 1rem;
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1rem;
+  gap: 0.8rem;
   margin-bottom: 1rem;
 `;
 
@@ -75,7 +56,7 @@ const CardImage = styled.div`
   grid-row: span 2;
 
   img {
-    width: 50px;
+    width: 40px;
     border-radius: 50%;
   }
 `;
@@ -84,24 +65,24 @@ const CardHeader = styled.div`
   span {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
 
     .username {
       color: #fff;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 500;
     }
 
     .tag {
       color: #838f9c;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
     }
   }
 
   .date {
     color: #838f9c;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
   }
 `;
@@ -111,7 +92,11 @@ const CardBody = styled.div`
     color: #fff;
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 8px;
+    text-decoration: unset;
+
+    :hover {
+      text-decoration: underline;
+    }
   }
 
   .body {
@@ -121,12 +106,16 @@ const CardBody = styled.div`
   }
 `;
 const CardFooter = styled.div`
-  margin-top: 1.5rem;
+  margin-top: 0.8rem;
   padding: 0 8px;
   grid-column: span 2;
   display: flex;
   align-items: baseline;
   gap: 12px;
+
+  a {
+    text-decoration: none;
+  }
 
   button {
     display: flex;
@@ -146,10 +135,6 @@ const CardFooter = styled.div`
       cursor: pointer;
     }
 
-    :last-child {
-      margin-left: auto;
-    }
-
     :hover {
       background-color: unset;
     }
@@ -162,26 +147,6 @@ const CardFooter = styled.div`
 
     &.dislike svg:hover {
       color: orange;
-    }
-
-    &.comments svg:hover {
-      color: lightgreen;
-    }
-
-    &.share {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #838f9c;
-      border-radius: 8px;
-      width: 30px;
-      height: 30px;
-
-      :hover {
-        cursor: pointer;
-        background-color: blueviolet;
-        border-color: transparent;
-      }
     }
   }
 `;

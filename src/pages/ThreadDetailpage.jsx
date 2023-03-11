@@ -2,12 +2,16 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Comments from '../components/Comments';
 import Navigation from '../components/styled/Navigation';
 import ThreadDetail from '../components/ThreadDetail';
 import { asyncGetThreadDetail } from '../states/threadDetail/action';
 
 function ThreadDetailpage() {
-  const { threadDetail = null } = useSelector((state) => state);
+  const {
+    threadDetail = null,
+    authUser = null,
+  } = useSelector((state) => state);
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -17,13 +21,28 @@ function ThreadDetailpage() {
 
   if (!threadDetail) return null;
 
+  const threadDetailData = {
+    ...threadDetail,
+    authUser,
+  };
+
+  const commentsList = threadDetail.comments.map((comment) => ({
+    ...comment,
+    authUser,
+  }));
+
   return (
     <Container>
       <Navigation />
       <Main>
-        <Section>
-          <ThreadDetail {...threadDetail} />
-        </Section>
+        <ThreadSection>
+          <ThreadDetail {...threadDetailData} />
+        </ThreadSection>
+        <CommentSection>
+          {commentsList.map((comments) => (
+            <Comments {...comments} key={comments.id} />
+          ))}
+        </CommentSection>
       </Main>
     </Container>
   );
@@ -39,15 +58,12 @@ const Main = styled.main`
   height: 100%;
 `;
 
-const Section = styled.section`
-  width: 500px;
-  margin: 3rem auto;
-  height: 100%;
+const ThreadSection = styled.section`
+  width: 800px;
+  margin: 0 auto;
+`;
 
-  h3 {
-    font-size: 24px;
-    font-weight: 500;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
+const CommentSection = styled.section`
+  width: 700px;
+  margin: 0 auto;
 `;
