@@ -24,8 +24,8 @@ export const asyncLogin = (loginForm) => async (dispatch) => {
     const authUser = await api.getOwnProfile();
     dispatch(setAuthUserActionCreator(authUser));
   } catch (error) {
-    api.removeAccessToken();
-    dispatch(removeAuthUserActionCreator());
+    // api.removeAccessToken();
+    // dispatch(removeAuthUserActionCreator());
     throw new Error(error.message);
   }
 };

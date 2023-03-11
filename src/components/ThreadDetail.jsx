@@ -5,38 +5,36 @@ import {
   IoThumbsDown,
   IoThumbsUp,
 } from 'react-icons/io5';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { postedAt } from '../utils/formatDate';
 import { Button } from './styled/Button';
 
-function ThreadItem({
-  id,
+function ThreadDetail({
   title,
   createdAt,
   body,
   upVotesBy,
   downVotesBy,
-  totalComments,
-  user,
+  comments,
+  owner,
 }) {
   return (
     <Card>
       <CardImage>
-        <img src={user.avatar} alt={user.name} />
+        <img src={owner.avatar} alt={owner.name} />
       </CardImage>
       <CardHeader>
         <span>
-          <p className="username">{user.name}</p>
+          <p className="username">{owner.name}</p>
           <p className="tag">
             @
-            {user.id}
+            {owner.id}
           </p>
         </span>
         <p className="date">{postedAt(createdAt)}</p>
       </CardHeader>
       <CardBody>
-        <NavLink to={`threads/${id}`} className="title">{title}</NavLink>
+        <h5 className="title">{title}</h5>
         <p className="body">{body}</p>
       </CardBody>
       <CardFooter>
@@ -50,7 +48,7 @@ function ThreadItem({
         </Button>
         <Button type="button" className="comments">
           <IoChatbubble />
-          <p>{totalComments}</p>
+          <p>{comments.length}</p>
         </Button>
         <Button type="button" className="share">
           <IoShare />
@@ -60,7 +58,7 @@ function ThreadItem({
   );
 }
 
-export default ThreadItem;
+export default ThreadDetail;
 
 const Card = styled.div`
   background-color: #1b2730;
@@ -113,15 +111,10 @@ const CardBody = styled.div`
     color: #fff;
     font-size: 18px;
     font-weight: 500;
-    text-decoration: unset;
-
-    :hover {
-      text-decoration: underline;
-    }
+    margin-bottom: 8px;
   }
 
   .body {
-    margin-top: 10px;
     color: #fff;
     font-size: 16px;
     font-weight: 400;
