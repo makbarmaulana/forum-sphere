@@ -5,11 +5,14 @@ import {
   IoThumbsDown,
   IoThumbsUp,
 } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { asyncClearVoteThreadDetail, asyncDownVoteThreadDetail, asyncUpVoteThreadDetail } from '../states/threadDetail/action';
 import { postedAt } from '../utils/formatDate';
 import { Button } from './styled/Button';
 
 function ThreadDetail({
+  id,
   title,
   createdAt,
   body,
@@ -17,7 +20,27 @@ function ThreadDetail({
   downVotesBy,
   comments,
   owner,
+  authUser,
 }) {
+  const dispatch = useDispatch();
+  const isToggleUpVote = upVotesBy.includes(authUser.id);
+  const isToggleDownVote = downVotesBy.includes(authUser.id);
+
+  const upVoteHandler = () => {
+    if (!isToggleUpVote) {
+      dispatch(asyncUpVoteThreadDetail(id));
+    } else {
+      dispatch(asyncClearVoteThreadDetail(id));
+    }
+  };
+
+  const downVoteHandler = () => {
+    if (!isToggleDownVote) {
+      dispatch(asyncDownVoteThreadDetail(id));
+    } else {
+      dispatch(asyncClearVoteThreadDetail(id));
+    }
+  };
   return (
     <Card>
       <CardImage>
@@ -38,12 +61,12 @@ function ThreadDetail({
         <p className="body">{body}</p>
       </CardBody>
       <CardFooter>
-        <Button type="button" className="like">
-          <IoThumbsUp />
+        <Button type="button" className="like" onClick={upVoteHandler}>
+          <IoThumbsUp style={isToggleUpVote && { color: 'red' }} />
           <p>{upVotesBy.length}</p>
         </Button>
-        <Button type="button" className="dislike">
-          <IoThumbsDown />
+        <Button type="button" className="dislike" onClick={downVoteHandler}>
+          <IoThumbsDown style={isToggleDownVote && { color: 'orange' }} />
           <p>{downVotesBy.length}</p>
         </Button>
         <Button type="button" className="comments">
