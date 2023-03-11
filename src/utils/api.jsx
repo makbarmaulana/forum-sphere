@@ -30,7 +30,11 @@ export const api = (() => {
 
   const register = async ({ name, email, password }) => {
     try {
-      const response = await instance.post('/register', { name, email, password });
+      const response = await instance.post('/register', {
+        name,
+        email,
+        password,
+      });
       const { user } = response.data.data;
       return user;
     } catch (error) {
@@ -86,6 +90,69 @@ export const api = (() => {
     return threads;
   };
 
+  const upVoteThread = async (threadId) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/up-vote`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { vote } = response.data.data;
+      return vote;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
+  const downVoteThread = async (threadId) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/down-vote`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { vote } = response.data.data;
+      return vote;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
+  const clearVoteThread = async (threadId) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/neutral-vote`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { vote } = response.data.data;
+      return vote;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
   const getThreadDetail = async (id) => {
     const response = await instance.get(`/threads/${id}`);
     const { detailThread } = response.data.data;
@@ -102,6 +169,9 @@ export const api = (() => {
     getAllUsers,
     createThread,
     getAllThreads,
+    upVoteThread,
+    downVoteThread,
+    clearVoteThread,
     getThreadDetail,
   };
 })();

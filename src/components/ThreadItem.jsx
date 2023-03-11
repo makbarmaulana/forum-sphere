@@ -1,14 +1,20 @@
 import React from 'react';
+import styled from 'styled-components';
 import {
   IoChatbubble,
   IoShare,
   IoThumbsDown,
   IoThumbsUp,
 } from 'react-icons/io5';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { postedAt } from '../utils/formatDate';
 import { Button } from './styled/Button';
+import {
+  asyncClearVoteThread,
+  asyncDownVoteThread,
+  asyncUpVoteThread,
+} from '../states/threads/actions';
 
 function ThreadItem({
   id,
@@ -19,7 +25,28 @@ function ThreadItem({
   downVotesBy,
   totalComments,
   user,
+  authUser,
 }) {
+  const dispatch = useDispatch();
+  const isToggleUpVote = upVotesBy.includes(authUser.id);
+  const isToggleDownVote = downVotesBy.includes(authUser.id);
+
+  const upVoteHandler = () => {
+    if (!isToggleUpVote) {
+      dispatch(asyncUpVoteThread(id));
+    } else {
+      dispatch(asyncClearVoteThread(id));
+    }
+  };
+
+  const downVoteHandler = () => {
+    if (!isToggleDownVote) {
+      dispatch(asyncDownVoteThread(id));
+    } else {
+      dispatch(asyncClearVoteThread(id));
+    }
+  };
+
   return (
     <Card>
       <CardImage>
@@ -36,22 +63,26 @@ function ThreadItem({
         <p className="date">{postedAt(createdAt)}</p>
       </CardHeader>
       <CardBody>
-        <NavLink to={`threads/${id}`} className="title">{title}</NavLink>
+        <Link to={`threads/${id}`} className="title">
+          {title}
+        </Link>
         <p className="body">{body}</p>
       </CardBody>
       <CardFooter>
-        <Button type="button" className="like">
-          <IoThumbsUp />
+        <Button type="button" className="like" onClick={upVoteHandler}>
+          <IoThumbsUp style={isToggleUpVote && { color: 'red' }} />
           <p>{upVotesBy.length}</p>
         </Button>
-        <Button type="button" className="dislike">
-          <IoThumbsDown />
+        <Button type="button" className="dislike" onClick={downVoteHandler}>
+          <IoThumbsDown style={isToggleDownVote && { color: 'orange' }} />
           <p>{downVotesBy.length}</p>
         </Button>
-        <Button type="button" className="comments">
-          <IoChatbubble />
-          <p>{totalComments}</p>
-        </Button>
+        <Link to={`threads/${id}`}>
+          <Button type="button" className="comments">
+            <IoChatbubble />
+            <p>{totalComments}</p>
+          </Button>
+        </Link>
         <Button type="button" className="share">
           <IoShare />
         </Button>
@@ -135,6 +166,10 @@ const CardFooter = styled.div`
   align-items: baseline;
   gap: 12px;
 
+  a {
+    text-decoration: none;
+  }
+
   button {
     display: flex;
     gap: 6px;
@@ -171,8 +206,12 @@ const CardFooter = styled.div`
       color: orange;
     }
 
-    &.comments svg:hover {
+    &.comments:hover {
       color: lightgreen;
+
+      p {
+        color: #fff;
+      }
     }
 
     &.share {
