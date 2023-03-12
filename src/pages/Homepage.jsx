@@ -1,36 +1,73 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Header from '../components/Header';
+import { Button } from '../components/styled/Button';
 import ThreadsList from '../components/ThreadsList';
 import Trends from '../components/Trends';
+import { setThreadsByCategory } from '../states/category/action';
 import { fetchingUsersAndThreads } from '../states/shared/actions';
 
 function Homepage() {
   const {
     authUser = null,
+    category = null,
     threads = [],
     users = [],
   } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     dispatch(fetchingUsersAndThreads());
   }, [dispatch]);
 
-  const threadsList = threads.map((thread) => ({
-    ...thread,
-    user: users.find((user) => user.id === thread.ownerId),
-    authUser,
-  }));
+  const filteredThreads = threads
+    .map((thread) => ({
+      ...thread,
+      user: users.find((user) => user.id === thread.ownerId),
+      authUser,
+    }))
+    .filter((thread) => thread.title.toLowerCase().includes(keyword.toLowerCase()))
+    .filter((thread) => category === null || thread.category === category);
+
+  const handleClearFilter = () => {
+    dispatch(setThreadsByCategory(null));
+    setKeyword('');
+  };
 
   return (
     <Container>
-      <Header />
+      <Header keyword={keyword} setKeyword={setKeyword} />
       <Main>
         <Trends threads={threads} />
         <ThreadContainer>
-          <ThreadsList threads={threadsList} />
+          {keyword && (
+          <p>
+            {filteredThreads.length}
+            {' '}
+            thread found for &quot;
+            {keyword}
+            &quot;
+            {category && (
+            <>
+              {' '}
+              in
+              {' '}
+              <strong>
+                #
+                {category}
+              </strong>
+            </>
+            )}
+          </p>
+          )}
+          {category && (
+            <Button margin="1rem 0" onClick={handleClearFilter}>
+              clear filter
+            </Button>
+          )}
+          <ThreadsList threads={filteredThreads} />
         </ThreadContainer>
         <Leaderboard />
       </Main>
@@ -69,4 +106,4 @@ const ThreadContainer = styled.div`
 const Leaderboard = styled.aside`
   border: 1px solid blue;
   height: max-content;
-  `;
+`;

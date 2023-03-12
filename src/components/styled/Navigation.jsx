@@ -14,7 +14,7 @@ import { Logo } from './Logo';
 import { Input } from './Form';
 import { asyncLogOut } from '../../states/authUser/action';
 
-function Navigation() {
+function Navigation({ keyword, setKeyword }) {
   const { authUser } = useSelector((state) => state);
   const dispatch = useDispatch();
 
@@ -23,7 +23,13 @@ function Navigation() {
       <NavBrand>
         <Logo width="35px" />
         <SearchBox>
-          <Input placeholder="# Explore" />
+          <Input
+            type="text"
+            name="keyword"
+            placeholder="# Explore"
+            value={keyword}
+            onChange={(({ target }) => setKeyword(target.value))}
+          />
         </SearchBox>
       </NavBrand>
       <NavList>
@@ -45,10 +51,7 @@ function Navigation() {
           <h5>{authUser.name}</h5>
           <IoCaretDown className="carret" />
         </Nav>
-        <Nav
-          className="signout"
-          onClick={() => dispatch(asyncLogOut())}
-        >
+        <Nav className="signout" onClick={() => dispatch(asyncLogOut())}>
           <IoLogOut />
         </Nav>
       </NavList>
@@ -83,7 +86,7 @@ const SearchBox = styled.div`
     border-radius: 10px;
 
     ::placeholder {
-      font-weight:600;
+      font-weight: 600;
     }
   }
 `;

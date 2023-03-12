@@ -1,15 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import Navigation from './styled/Navigation';
 
-function Header() {
+function Header({ keyword, setKeyword }) {
   return (
-    <Container>
-      <Navigation />
-    </Container>
+    <Navigation keyword={keyword} setKeyword={setKeyword} />
   );
 }
 
 export default Header;
-
-const Container = styled.header``;
