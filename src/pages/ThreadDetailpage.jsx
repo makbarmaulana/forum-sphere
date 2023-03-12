@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import AddComment from '../components/AddComment';
 import Comments from '../components/Comments';
 import Navigation from '../components/styled/Navigation';
 import ThreadDetail from '../components/ThreadDetail';
@@ -39,6 +40,7 @@ function ThreadDetailpage() {
           <ThreadDetail {...threadDetailData} />
         </ThreadSection>
         <CommentSection>
+          <AddComment />
           {commentsList.map((comments) => (
             <Comments {...comments} key={comments.id} />
           ))}

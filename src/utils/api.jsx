@@ -159,6 +159,27 @@ export const api = (() => {
     return detailThread;
   };
 
+  const addComment = async ({ threadId, content }) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/comments`,
+        { content },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { comment } = response.data.data;
+      return comment;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
   const upVoteComment = async ({ threadId, commentId }) => {
     const token = getAccessToken();
     if (!token) {
@@ -236,6 +257,7 @@ export const api = (() => {
     downVoteThread,
     clearVoteThread,
     getThreadDetail,
+    addComment,
     upVoteComment,
     downVoteComment,
     clearVoteComment,

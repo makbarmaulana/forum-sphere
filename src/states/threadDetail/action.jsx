@@ -51,6 +51,13 @@ export const clearVoteThreadDetailActionsCreator = ({ threadId, userId }) => ({
   },
 });
 
+export const addCommentActionCreator = (comment) => ({
+  type: ActionTypes.ADD_COMMENT,
+  payload: {
+    comment,
+  },
+});
+
 export const upVoteCommentActionsCreator = ({ commentId, userId }) => ({
   type: ActionTypes.UP_VOTE_COMMENT,
   payload: {
@@ -112,6 +119,15 @@ export const asyncClearVoteThreadDetail = (threadId) => async (dispatch, getStat
   try {
     await api.clearVoteThread(threadId);
     dispatch(clearVoteThreadDetailActionsCreator(prevState));
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const asyncAddComment = ({ threadId, content }) => async (dispatch) => {
+  try {
+    const comment = await api.addComment({ threadId, content });
+    dispatch(addCommentActionCreator(comment));
   } catch (error) {
     throw new Error(error.message);
   }

@@ -35,6 +35,11 @@ export const threadDetailReducer = (threadDetail = null, action = {}) => {
         };
       }
       return threadDetail;
+    case ActionTypes.ADD_COMMENT:
+      return {
+        ...threadDetail,
+        comments: threadDetail.comments.concat(action.payload.comment),
+      };
     case ActionTypes.UP_VOTE_COMMENT:
       return {
         ...threadDetail,
