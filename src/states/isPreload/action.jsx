@@ -18,6 +18,7 @@ export const asyncPreloadProcess = () => async (dispatch) => {
     dispatch(setAuthUserActionCreator(authUser));
   } catch (error) {
     throw new Error(error.message);
+  } finally {
+    dispatch(setIsPreloadActionCreator(false));
   }
-  dispatch(setIsPreloadActionCreator(false));
 };
