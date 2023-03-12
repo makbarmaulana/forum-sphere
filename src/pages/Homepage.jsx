@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Header from '../components/Header';
+import Leaderboards from '../components/Leaderboards';
 import { Button } from '../components/styled/Button';
 import ThreadsList from '../components/ThreadsList';
 import Trends from '../components/Trends';
 import { setThreadsByCategory } from '../states/category/action';
-import { fetchingUsersAndThreads } from '../states/shared/actions';
+import { asyncPopulateStates } from '../states/shared/actions';
 
 function Homepage() {
   const {
@@ -14,12 +15,13 @@ function Homepage() {
     category = null,
     threads = [],
     users = [],
+    leaderboards = null,
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
-    dispatch(fetchingUsersAndThreads());
+    dispatch(asyncPopulateStates());
   }, [dispatch]);
 
   const filteredThreads = threads
@@ -69,7 +71,7 @@ function Homepage() {
           )}
           <ThreadsList threads={filteredThreads} />
         </ThreadContainer>
-        <Leaderboard />
+        <Leaderboards leaderboards={leaderboards} />
       </Main>
     </Container>
   );
@@ -101,9 +103,4 @@ const ThreadContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
-
-const Leaderboard = styled.aside`
-  border: 1px solid blue;
-  height: max-content;
 `;

@@ -243,6 +243,16 @@ export const api = (() => {
     }
   };
 
+  const getLeaderboards = async () => {
+    try {
+      const response = await instance.get('/leaderboards');
+      const { leaderboards } = response.data.data;
+      return leaderboards;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
   return {
     setAccessToken,
     removeAccessToken,
@@ -261,5 +271,6 @@ export const api = (() => {
     upVoteComment,
     downVoteComment,
     clearVoteComment,
+    getLeaderboards,
   };
 })();
