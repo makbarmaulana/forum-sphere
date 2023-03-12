@@ -9,10 +9,9 @@ import ThreadDetail from '../components/ThreadDetail';
 import { asyncGetThreadDetail } from '../states/threadDetail/action';
 
 function ThreadDetailpage() {
-  const {
-    threadDetail = null,
-    authUser = null,
-  } = useSelector((state) => state);
+  const { threadDetail = null, authUser = null } = useSelector(
+    (state) => state,
+  );
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -27,10 +26,13 @@ function ThreadDetailpage() {
     authUser,
   };
 
-  const commentsList = threadDetail.comments.map((comment) => ({
-    ...comment,
-    authUser,
-  }));
+  const commentsList = threadDetail.comments
+    .map((comment) => ({
+      ...comment,
+      authUser,
+      createdAt: new Date(comment.createdAt),
+    }))
+    .sort((a, b) => b.createdAt - a.createdAt);
 
   return (
     <Container>
