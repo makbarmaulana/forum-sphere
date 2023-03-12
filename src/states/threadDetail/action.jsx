@@ -51,6 +51,30 @@ export const clearVoteThreadDetailActionsCreator = ({ threadId, userId }) => ({
   },
 });
 
+export const upVoteCommentActionsCreator = ({ commentId, userId }) => ({
+  type: ActionTypes.UP_VOTE_COMMENT,
+  payload: {
+    commentId,
+    userId,
+  },
+});
+
+export const downVoteCommentActionsCreator = ({ commentId, userId }) => ({
+  type: ActionTypes.DOWN_VOTE_COMMENT,
+  payload: {
+    commentId,
+    userId,
+  },
+});
+
+export const clearVoteCommentActionsCreator = ({ commentId, userId }) => ({
+  type: ActionTypes.CLEAR_VOTE_COMMENT,
+  payload: {
+    commentId,
+    userId,
+  },
+});
+
 export const asyncUpVoteThreadDetail = (threadId) => async (dispatch, getState) => {
   const { authUser } = getState();
   const prevState = { threadId, userId: authUser.id };
@@ -88,6 +112,48 @@ export const asyncClearVoteThreadDetail = (threadId) => async (dispatch, getStat
   try {
     await api.clearVoteThread(threadId);
     dispatch(clearVoteThreadDetailActionsCreator(prevState));
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const asyncUpVoteComment = ({ threadId, commentId }) => async (dispatch, getState) => {
+  const { authUser } = getState();
+  const prevState = { threadId, commentId, userId: authUser.id };
+
+  dispatch(upVoteCommentActionsCreator({ commentId, userId: authUser.id }));
+
+  try {
+    await api.upVoteComment({ threadId, commentId });
+    dispatch(upVoteCommentActionsCreator(prevState));
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const asyncDownVoteComment = ({ threadId, commentId }) => async (dispatch, getState) => {
+  const { authUser } = getState();
+  const prevState = { threadId, commentId, userId: authUser.id };
+
+  dispatch(downVoteCommentActionsCreator({ commentId, userId: authUser.id }));
+
+  try {
+    await api.downVoteComment({ threadId, commentId });
+    dispatch(downVoteCommentActionsCreator(prevState));
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const asyncClearVoteComment = ({ threadId, commentId }) => async (dispatch, getState) => {
+  const { authUser } = getState();
+  const prevState = { threadId, commentId, userId: authUser.id };
+
+  dispatch(clearVoteCommentActionsCreator({ commentId, userId: authUser.id }));
+
+  try {
+    await api.clearVoteComment({ threadId, commentId });
+    dispatch(clearVoteCommentActionsCreator(prevState));
   } catch (error) {
     throw new Error(error.message);
   }

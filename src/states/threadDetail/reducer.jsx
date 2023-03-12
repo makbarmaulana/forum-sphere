@@ -35,6 +35,47 @@ export const threadDetailReducer = (threadDetail = null, action = {}) => {
         };
       }
       return threadDetail;
+    case ActionTypes.UP_VOTE_COMMENT:
+      return {
+        ...threadDetail,
+        comments: threadDetail.comments.map((comment) => {
+          if (comment.id === action.payload.commentId) {
+            return {
+              ...comment,
+              upVotesBy: comment.upVotesBy.includes(action.payload.userId)
+                ? comment.upVotesBy
+                : comment.upVotesBy.concat(action.payload.userId),
+              downVotesBy: comment.downVotesBy.filter((id) => id !== action.payload.userId),
+            };
+          }
+          return comment;
+        }),
+      };
+    case ActionTypes.DOWN_VOTE_COMMENT:
+      return {
+        ...threadDetail,
+        comments: threadDetail.comments.map((comment) => {
+          if (comment.id === action.payload.commentId) {
+            return {
+              ...comment,
+              upVotesBy: comment.upVotesBy.filter((id) => id !== action.payload.userId),
+              downVotesBy: comment.downVotesBy.includes(action.payload.userId)
+                ? comment.downVotesBy
+                : comment.downVotesBy.concat(action.payload.userId),
+            };
+          }
+          return comment;
+        }),
+      };
+    case ActionTypes.CLEAR_VOTE_COMMENT:
+      return {
+        ...threadDetail,
+        comments: threadDetail.comments.map((comment) => ({
+          ...comment,
+          upVotesBy: comment.upVotesBy.filter((id) => id !== action.payload.userId),
+          downVotesBy: comment.downVotesBy.filter((id) => id !== action.payload.userId),
+        })),
+      };
     default:
       return threadDetail;
   }

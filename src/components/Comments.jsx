@@ -1,12 +1,46 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IoThumbsDown, IoThumbsUp } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { postedAt } from '../utils/formatDate';
 import { Button } from './styled/Button';
+import {
+  asyncClearVoteComment,
+  asyncDownVoteComment,
+  asyncUpVoteComment,
+} from '../states/threadDetail/action';
 
 function Comments({
-  content, createdAt, upVotesBy, downVotesBy, owner,
+  id: commentId,
+  content,
+  createdAt,
+  upVotesBy,
+  downVotesBy,
+  owner,
+  authUser,
 }) {
+  const dispatch = useDispatch();
+  const { id: threadId } = useParams();
+  const isLiked = upVotesBy.includes(authUser.id);
+  const isDisliked = downVotesBy.includes(authUser.id);
+
+  const upVoteHandler = () => {
+    if (!isLiked) {
+      dispatch(asyncUpVoteComment({ threadId, commentId }));
+    } else {
+      dispatch(asyncClearVoteComment({ threadId, commentId }));
+    }
+  };
+
+  const downVoteHandler = () => {
+    if (!isDisliked) {
+      dispatch(asyncDownVoteComment({ threadId, commentId }));
+    } else {
+      dispatch(asyncClearVoteComment({ threadId, commentId }));
+    }
+  };
+
   return (
     <Card>
       <CardImage>
@@ -26,12 +60,12 @@ function Comments({
         <p className="body">{content}</p>
       </CardBody>
       <CardFooter>
-        <Button type="button" className="like">
-          <IoThumbsUp />
+        <Button type="button" className="like" onClick={upVoteHandler}>
+          <IoThumbsUp style={isLiked && { color: 'red' }} />
           <p>{upVotesBy.length}</p>
         </Button>
-        <Button type="button" className="dislike">
-          <IoThumbsDown />
+        <Button type="button" className="dislike" onClick={downVoteHandler}>
+          <IoThumbsDown style={isDisliked && { color: 'orange' }} />
           <p>{downVotesBy.length}</p>
         </Button>
       </CardFooter>

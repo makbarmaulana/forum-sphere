@@ -159,6 +159,69 @@ export const api = (() => {
     return detailThread;
   };
 
+  const upVoteComment = async ({ threadId, commentId }) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/comments/${commentId}/up-vote`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { vote } = response.data.data;
+      return vote;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
+  const downVoteComment = async ({ threadId, commentId }) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/comments/${commentId}/down-vote`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { vote } = response.data.data;
+      return vote;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
+  const clearVoteComment = async ({ threadId, commentId }) => {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
+
+    try {
+      const response = await instance.post(
+        `/threads/${threadId}/comments/${commentId}/neutral-vote`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const { vote } = response.data.data;
+      return vote;
+    } catch (error) {
+      throw new Error(error?.response?.data?.message);
+    }
+  };
+
   return {
     setAccessToken,
     removeAccessToken,
@@ -173,5 +236,8 @@ export const api = (() => {
     downVoteThread,
     clearVoteThread,
     getThreadDetail,
+    upVoteComment,
+    downVoteComment,
+    clearVoteComment,
   };
 })();
